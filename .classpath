@@ -2,6 +2,7 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="test"/>
+	<classpathentry excluding="jsp/" kind="src" path="resources"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/com.ibm.csi.npm.storage"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/com.ibm.csi.npm.platform"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/com.ibm.csi.npm.common"/>
@@ -179,5 +180,6 @@
 	<classpathentry kind="lib" path="/home/sherpa/.ivy2/cache/org.scalatest/scalatest_2.11/bundles/scalatest_2.11-2.2.1.jar"/>
 	<classpathentry kind="lib" path="/home/sherpa/.ivy2/cache/junit/junit/jars/junit-4.12.jar"/>
 	<classpathentry kind="lib" path="/home/sherpa/.ivy2/cache/org.hamcrest/hamcrest-core/jars/hamcrest-core-1.3.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/com.ibm.csi.npm.storage.jdbc"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

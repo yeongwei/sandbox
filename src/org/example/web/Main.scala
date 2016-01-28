@@ -19,12 +19,15 @@ object Main {
     // Context 
     val webAppCtx = new WebAppContext()
     webAppCtx.setResourceBase("/home/sherpa/sandbox/resources")
-    webAppCtx.setContextPath("/app")
+    webAppCtx.setContextPath("/")
+    // Partial deployment descriptors in coding
+    // webAppCtx.setOverrideDescriptor("/home/sherpa/sandbox/src/org/example/web/customWeb.xml")
     handlerCollection.addHandler(webAppCtx)
-    // Context 
+    
+    // Context - IF ABOVE IS "/" THEN THE WEB APP BELOW GOES MISSING
     val webAppCtx2 = new WebAppContext()
     webAppCtx2.setResourceBase("/home/sherpa/sandbox/resources")
-    webAppCtx2.setContextPath("/app2")
+    webAppCtx2.setContextPath("app2")
     handlerCollection.addHandler(webAppCtx2)
     
     // Security
@@ -34,7 +37,31 @@ object Main {
     
     jettyServer.setHandler(handlerCollection)
     
-    jettyServer.start()
+    jettyServer.start() 
+    
+    /*
+    // CANNOT DYNAMICALLY OVERRIDE DEPLOYMENT DESCRIPTOR
+    val targetHandler = handlerCollection.getHandlers.filter { 
+      h => if (h.isInstanceOf[WebAppContext]) {
+        if (h.asInstanceOf[WebAppContext].getContextPath.equals(webAppCtx.getContextPath)) {
+          println(s"YEONGWEI: ${h.getClass.getName}")
+          true
+        } else {
+          false 
+        }
+      } else {
+        false
+      }
+    }
+    // println(s"YEONGWEI: ${targetHandler.getClass.getName}")
+    
+    targetHandler.foreach { h => {
+        // println(s"YEONGWEI: ${h.getClass.getName}")
+        h.asInstanceOf[WebAppContext].setOverrideDescriptor("/home/sherpa/sandbox/src/org/example/web/customWeb.xml")
+      } 
+    }
+    */
+
     jettyServer.join()
   }
 }

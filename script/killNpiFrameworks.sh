@@ -19,7 +19,7 @@ killCmd() {
 	done
 }
 
-FRAMEWORKS=("zookeeper" "kafka" "hadoop")
+FRAMEWORKS=("zookeeper" "kafka" "hadoop" "npi")
 
 for fw in "${FRAMEWORKS[@]}"
 do

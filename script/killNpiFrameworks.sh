@@ -1,7 +1,7 @@
 #!/bin/bash
 
 findPID() {
-	PIDs=(`ps -ef | grep ${1} | grep -v grep | grep -v gedit | grep -v killNpiFrameworks | awk '{print $2}'`)
+	PIDs=(`ps -ef | grep -i "${1}/bootstrap.sh" | grep -v grep | grep -v gedit | grep -v killNpiFrameworks | awk '{print $2}'`)
 	echo ${PIDs[*]}
 }
 
@@ -44,9 +44,9 @@ killCmd() {
 	done
 }
 
-FRAMEWORKS=("npi" "hadoop" "kafka" "zookeeper")
+FRAMEWORKS=("npi" "spark_hadoop" "kafka" "zk")
 
 for fw in "${FRAMEWORKS[@]}"
 do
-	killCmd "-i ${fw}"
+	killCmd "${fw}"
 done

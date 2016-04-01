@@ -7,9 +7,12 @@ import java.sql.{ Connection => sqlConnection }
 import java.util.Properties
 import java.sql.ResultSet
 
-class JdbcTest extends FunSpec {
-  def jdbcUrl(host: String = "localhost", port: Int = 8081) = 
-    s"jdbc:npi:http:url=http://$host:$port"
+trait JdbcBaseSpec {
+    def jdbcUrl(host: String = "localhost", port: Int = 8082) = 
+      s"jdbc:npi:http:url=http://$host:$port"
+}
+
+class JdbcTest extends FunSpec with JdbcBaseSpec {
   
   describe("Connect to Storage via JDBC") {
     var connection: sqlConnection = null
@@ -22,10 +25,13 @@ class JdbcTest extends FunSpec {
       info(jdbcUrl())
       
       try {
-        connection = DriverManager.getConnection(jdbcUrl(), info2)    
+        connection = DriverManager.getConnection(jdbcUrl(), info2)
         assert(!connection.isClosed())
       } catch {
-        case _: Throwable => assert(false)
+        case e: Throwable => {
+            e.printStackTrace()
+            assert(false)
+          }
       }
     }
     
@@ -77,6 +83,40 @@ class JdbcTest extends FunSpec {
     it("should close connection") {
       connection.close()
       assert(connection.isClosed())
+    }
+    
+    it("should fail on credentails") {
+      val info2 = new Properties()
+      info2.put("user", "npiuser2")
+      info2.put("password", "npiuser2")
+      
+      try {
+        connection = DriverManager.getConnection(jdbcUrl(), info2)
+        assert(false, "should fail credentials")
+      } catch {
+        case ex: Throwable => {
+          ex.printStackTrace()
+          assert(true)
+        }  
+      }
+    }
+    
+    it("should re-establish JDBC Connection") {
+      val info2 = new Properties()
+      info2.put("user", "npiuser")
+      info2.put("password", "npiuser")
+      
+      connection = DriverManager.getConnection(jdbcUrl(), info2)
+      val statement = connection.createStatement()
+      val status = statement.execute("select NAME, \"VALUE\" from DEFAULTS.CONSOLEDATA")
+      assert(status)
+      
+      val resultset = statement.getResultSet
+      assert(resultset.isClosed() == false)
+      
+      while(resultset.next()) {
+        info(s"${resultset.getString(1)}: ${resultset.getString(2)}")
+      }
     }
   }
 }
